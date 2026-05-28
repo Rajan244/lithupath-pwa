@@ -37,8 +37,8 @@ export default function LearnTab() {
         initialStatus = 'weak';
         nextReview.setHours(now.getHours() + 12);
       } else if (scoreDelta === 1) {
-        initialScore = 4;
-        initialStatus = 'medium';
+        initialScore = 2;
+        initialStatus = 'weak';
         nextReview.setDate(now.getDate() + 1);
       } else if (scoreDelta === 3) {
         initialScore = 7;

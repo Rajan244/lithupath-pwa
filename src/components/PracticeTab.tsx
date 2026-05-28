@@ -118,8 +118,14 @@ export default function PracticeTab() {
     let progress = await db.user_item_progress.get({ item_id: currentItem.item_id, user_id: 'local_user' });
 
     if (progress) {
-      const scoreDelta = isCorrect ? 2 : -2;
-      progress.score = Math.max(0, Math.min(10, progress.score + scoreDelta));
+      if (isCorrect) {
+        // If it was weak, jump it to medium (4) so it stops being considered weak.
+        // If it was already medium or higher, add 2.
+        progress.score = Math.max(4, Math.min(10, progress.score + 2));
+      } else {
+        // Any mistake drops it to 0 (weak)
+        progress.score = 0;
+      }
       progress.times_seen += 1;
       if (isCorrect) progress.times_correct += 1;
       else progress.times_wrong += 1;
