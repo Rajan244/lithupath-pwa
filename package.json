@@ -1,7 +1,7 @@
 {
   "name": "lithupath-app",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -16,7 +16,6 @@
     "lucide-react": "^1.17.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
-    "react-router-dom": "^7.15.1",
     "tailwind-merge": "^3.6.0",
     "zustand": "^5.0.14"
   },

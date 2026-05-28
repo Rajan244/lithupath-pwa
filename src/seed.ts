@@ -11,7 +11,7 @@ export async function seedDatabaseIfEmpty() {
   console.log('Fetching syllabus data for initial seed...');
   
   try {
-    const response = await fetch('/lithuanian_30_day_syllabus.json');
+    const response = await fetch(`${import.meta.env.BASE_URL}lithuanian_30_day_syllabus.json`);
     if (!response.ok) {
       throw new Error(`Failed to fetch: ${response.statusText}`);
     }
