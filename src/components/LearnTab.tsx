@@ -3,6 +3,9 @@ import { Volume2, BookOpen } from 'lucide-react';
 import { useAppStore } from '../store';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db';
+import TypeBadge from './TypeBadge';
+import WordBreakdown from './WordBreakdown';
+import clsx from 'clsx';
 
 export default function LearnTab() {
   const [showPattern, setShowPattern] = useState(false);
@@ -137,15 +140,38 @@ export default function LearnTab() {
             <Volume2 className="w-6 h-6 text-secondary group-hover:text-primary transition-colors" />
           </button>
 
-          <h1 className="text-5xl font-display font-bold text-primary mb-3">{currentItem.lt}</h1>
-          <p className="text-2xl text-text/80 mb-8 font-medium">{currentItem.en}</p>
+          <h1 className={clsx(
+            "font-display font-bold text-primary mb-3 text-center",
+            currentItem.type === 'sentence' ? "text-3xl" : "text-5xl"
+          )}>
+            {currentItem.lt}
+          </h1>
+          <p className={clsx(
+            "text-text/80 font-medium text-center",
+            currentItem.type === 'sentence' ? "text-xl mb-6" : "text-2xl mb-8"
+          )}>
+            {currentItem.en}
+          </p>
 
-          {(currentItem.grammar_note || currentItem.mnemonic) && (
+          <div className="flex flex-wrap gap-2 justify-center mb-4">
+            <TypeBadge type={currentItem.type} />
+            {currentItem.formality && (
+              <span className="flex items-center text-[10px] font-bold px-2.5 py-1 rounded-full border bg-gray-50 text-gray-600 border-gray-200 uppercase tracking-wider">
+                {currentItem.formality}
+              </span>
+            )}
+          </div>
+
+          {(currentItem.grammar_note || currentItem.mnemonic || currentItem.literal_translation) && (
             <div className="w-full bg-background rounded-2xl p-5 mb-4 text-left">
               <h4 className="text-xs font-bold text-text/50 uppercase tracking-wider mb-2">Note</h4>
-              <p className="text-sm font-medium text-primary mb-1">{currentItem.mnemonic || currentItem.grammar_note}</p>
+              <p className="text-sm font-medium text-primary mb-1">
+                {currentItem.mnemonic || currentItem.grammar_note || (currentItem.literal_translation ? `Literal: ${currentItem.literal_translation}` : '')}
+              </p>
             </div>
           )}
+
+          <WordBreakdown ltText={currentItem.lt} />
 
           {!showPattern && currentItem.pattern ? (
             <button 

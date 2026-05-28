@@ -36,7 +36,11 @@ export async function seedDatabaseIfEmpty() {
         quiz_modes: item.test_modes || ['recognition'],
         grammar_note: item.grammar?.notes || item.grammar_note,
         mnemonic: item.mnemonic,
-        pattern: item.pattern
+        pattern: item.pattern,
+        formality: item.usage?.formality,
+        example_lt: item.usage?.example_lt,
+        example_en: item.usage?.example_en,
+        literal_translation: item.usage?.literal_translation
       });
     }
 
@@ -57,7 +61,11 @@ export async function seedDatabaseIfEmpty() {
             quiz_modes: item.quiz_modes || ['recognition', 'production'],
             grammar_note: item.grammar_note || item.grammar,
             mnemonic: item.mnemonic,
-            pattern: item.pattern
+            pattern: item.pattern,
+            formality: item.usage?.formality,
+            example_lt: item.usage?.example_lt,
+            example_en: item.usage?.example_en,
+            literal_translation: item.usage?.literal_translation
           });
         }
       }

@@ -14,6 +14,10 @@ export interface CourseItem {
   grammar_note?: string;
   mnemonic?: string;
   pattern?: string;
+  formality?: string;
+  example_lt?: string;
+  example_en?: string;
+  literal_translation?: string;
 }
 
 export interface UserItemProgress {
