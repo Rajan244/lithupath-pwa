@@ -81,10 +81,42 @@ export default function PracticeTab() {
     if (practiceItems.length > 0 && currentIndex < practiceItems.length && allItems) {
       const { item: currentItem, direction } = practiceItems[currentIndex];
 
-      const wrongItems = allItems
-        .filter(i => i.item_id !== currentItem.item_id)
-        .sort(() => 0.5 - Math.random())
-        .slice(0, 3);
+      let wrongItems = allItems.filter(i => i.item_id !== currentItem.item_id);
+      
+      // Smart Distractor Logic
+      // 1. Filter by same type
+      const sameType = wrongItems.filter(i => i.type === currentItem.type);
+      if (sameType.length >= 3) {
+        wrongItems = sameType;
+      }
+
+      // 2. Score items based on similarity
+      wrongItems.sort((a, b) => {
+        let scoreA = 0;
+        let scoreB = 0;
+        
+        // Bonus for sharing tags
+        if (currentItem.tags && currentItem.tags.length > 0) {
+          const aHasTag = a.tags?.some(t => currentItem.tags.includes(t));
+          const bHasTag = b.tags?.some(t => currentItem.tags.includes(t));
+          if (aHasTag) scoreA += 10;
+          if (bHasTag) scoreB += 10;
+        }
+        
+        // Bonus for same topic
+        if (currentItem.topic) {
+          if (a.topic === currentItem.topic) scoreA += 5;
+          if (b.topic === currentItem.topic) scoreB += 5;
+        }
+
+        // Add some randomness so it's not always the exact same distractors
+        scoreA += Math.random() * 2;
+        scoreB += Math.random() * 2;
+        
+        return scoreB - scoreA; // descending
+      });
+
+      wrongItems = wrongItems.slice(0, 3);
 
       let newOptions: Option[];
 
