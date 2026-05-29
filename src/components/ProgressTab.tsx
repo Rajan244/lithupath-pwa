@@ -1,10 +1,30 @@
+import { useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { Target, Trash2 } from 'lucide-react';
+import { Target, Trash2, RefreshCw } from 'lucide-react';
 import { db } from '../db';
 import { useAppStore } from '../store';
 import TypeBadge from './TypeBadge';
+import clsx from 'clsx';
 
 export default function ProgressTab() {
+  const [isChecking, setIsChecking] = useState(false);
+
+  const checkForUpdates = async () => {
+    setIsChecking(true);
+    try {
+      if ('serviceWorker' in navigator) {
+        const registration = await navigator.serviceWorker.ready;
+        if (registration) {
+          await registration.update();
+        }
+      }
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } catch (e) {
+      window.location.reload();
+    }
+  };
   const progressStats = useLiveQuery(async () => {
     const allProgress = await db.user_item_progress.toArray();
     const allItems = await db.course_items.toArray();
@@ -148,7 +168,15 @@ export default function ProgressTab() {
         </button>
       </div>
 
-      <div className="mt-12 text-center pb-8">
+      <div className="mt-12 text-center pb-8 flex flex-col items-center gap-4">
+        <button 
+          onClick={checkForUpdates}
+          disabled={isChecking}
+          className="inline-flex items-center text-primary font-bold text-sm bg-primary/10 px-4 py-2 rounded-lg hover:bg-primary/20 transition-colors">
+          <RefreshCw className={clsx("w-4 h-4 mr-2", isChecking && "animate-spin")} /> 
+          {isChecking ? 'Checking & Reloading...' : 'Check for App Updates'}
+        </button>
+
         <button 
           onClick={async () => {
             if (window.confirm("Are you sure you want to completely wipe all your progress and start over as a brand new user?")) {
